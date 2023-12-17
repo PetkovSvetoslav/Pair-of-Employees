@@ -39,7 +39,7 @@ public class EmployeeProjectController {
             List<String> pairs = employeeProjectService.findLongestWorkingPairs();
             model.addAttribute("pairs", pairs);
         } catch (DomainException e) {
-            model.addAttribute("error", "Error processing file: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error processing file: " + e.getMessage());
         }
         return "index";
     }
