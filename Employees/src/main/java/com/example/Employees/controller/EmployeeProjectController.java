@@ -1,5 +1,8 @@
 package com.example.Employees.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import com.example.Employees.exception.DomainException;
 import com.example.Employees.model.entity.EmployeeProject;
@@ -11,9 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/employeeProjects")
+@Controller
 public class EmployeeProjectController {
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeProjectController.class);
+
     private final EmployeeProjectService employeeProjectService;
     private final CSVParserService csvParserService;
     private final EmployeeProjectRepository employeeProjectRepository;
@@ -39,6 +43,7 @@ public class EmployeeProjectController {
             List<String> pairs = employeeProjectService.findLongestWorkingPairs();
             model.addAttribute("pairs", pairs);
         } catch (DomainException e) {
+            logger.error("Error processing CSV file", e);
             model.addAttribute("errorMessage", "Error processing file: " + e.getMessage());
         }
         return "index";
