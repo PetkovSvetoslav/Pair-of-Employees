@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Employee Project Collaboration</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
 </head>
 <body>
 
 <div class="container">
     <h1>Find Longest Working Employee Pairs</h1>
-    
-    <!-- Form for uploading CSV file -->
+
     <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
         <input type="file" name="file" required />
         <button type="submit">Upload CSV</button>
     </form>
 
-    <!-- Display error message if present -->
     <div th:if="${errorMessage}" class="error-message">
         <p th:text="${errorMessage}"></p>
     </div>
 
-    <!-- Display results if they are available -->
     <div th:if="${pairs != null}">
         <h2>Results:</h2>
         <ul>
-            <li th:each="pair : ${pairs}">
-                <span th:text="${pair}">Pair Info</span>
+            <li th:each="pairInfo : ${pairs}">
+                <span th:text="${pairInfo}"></span>
             </li>
         </ul>
     </div>
-</div>
 
+</div>
 </body>
 </html>
+
