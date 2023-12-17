@@ -54,22 +54,43 @@ public class EmployeeProjectService {
         return d1.isBefore(d2) ? d1 : (d2 != null ? d2 : d1);
     }
 
-    private List<String> formatOutput(Map<Pair, Map<Long, Integer>> pairProjectDays) {
-        List<String> output = new ArrayList<>();
-        Set<Pair> processedPairs = new HashSet<>();
+//    private List<String> formatOutput(Map<Pair, Map<Long, Integer>> pairProjectDays) {
+//        List<String> output = new ArrayList<>();
+//        Set<Pair> processedPairs = new HashSet<>();
+//
+//        pairProjectDays.forEach((pair, projectDays) -> {
+//            if (pair.getEmployeeId1().equals(pair.getEmployeeId2())) {
+//                return;
+//            }
+//            if (!processedPairs.add(pair)) {
+//                return;
+//            }
+//            int totalDays = projectDays.values().stream().mapToInt(Integer::intValue).sum();
+//            output.add(pair.getEmployeeId1() + ", " + pair.getEmployeeId2() + ", " + totalDays);
+//            projectDays.forEach((projectId, days) -> output.add("\t" + projectId + ", " + days));
+//        });
+//        return output;
+//    }
+private List<String> formatOutput(Map<Pair, Map<Long, Integer>> pairProjectDays) {
+    List<String> output = new ArrayList<>();
 
-        pairProjectDays.forEach((pair, projectDays) -> {
-            if (pair.getEmployeeId1().equals(pair.getEmployeeId2())) {
-                return;
-            }
-            if (!processedPairs.add(pair)) {
-                return;
-            }
-            int totalDays = projectDays.values().stream().mapToInt(Integer::intValue).sum();
+    pairProjectDays.forEach((pair, projectDays) -> {
+        int totalDays = projectDays.values().stream().mapToInt(Integer::intValue).sum();
+
+        if (totalDays > 0) {
             output.add(pair.getEmployeeId1() + ", " + pair.getEmployeeId2() + ", " + totalDays);
-            projectDays.forEach((projectId, days) -> output.add("\t" + projectId + ", " + days));
-        });
-        return output;
-    }
+
+            projectDays.forEach((projectId, days) -> {
+                if (days > 0) {
+                    output.add("\t" + projectId + ", " + days);
+                }
+            });
+        }
+    });
+
+    return output;
+}
+
 
 }
+
