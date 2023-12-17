@@ -9,11 +9,19 @@
 
 <div class="container">
     <h1>Find Longest Working Employee Pairs</h1>
+    
+    <!-- Form for uploading CSV file -->
     <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" />
+        <input type="file" name="file" required />
         <button type="submit">Upload CSV</button>
     </form>
 
+    <!-- Display error message if present -->
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Display results if they are available -->
     <div th:if="${pairs != null}">
         <h2>Results:</h2>
         <ul>
