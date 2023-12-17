@@ -2,7 +2,7 @@ package com.example.Employees.exception;
 
 public class DomainException extends Exception {
 
-    public DomainException(DomainErrorCode errorCode) {
+    public DomainException(String errorCode) {
         super(String.valueOf(errorCode));
     }
 
