@@ -1,6 +1,5 @@
 package com.example.Employees.service;
 
-
 import com.example.Employees.controller.EmployeeProjectController;
 import com.example.Employees.exception.DomainErrorCode;
 import com.example.Employees.exception.DomainException;
@@ -41,7 +40,7 @@ public class CSVParserService {
                 }
                 logger.debug("Parsing line: " + line);
 
-                String[] data = line.split(",");
+                String[] data = line.split(",",-1);
                 logger.debug("Data array: " + Arrays.toString(data));
                 if (data.length != 4) {
                     logger.error("Incorrect number of fields in line: " + line);
@@ -67,13 +66,17 @@ public class CSVParserService {
             employeeProject.setEmployeeId(parseLong(data[0].trim(), "EmpID"));
             employeeProject.setProjectId(parseLong(data[1].trim(), "ProjectID"));
             employeeProject.setDateFrom(parseDate(data[2].trim()));
-            employeeProject.setDateTo(data.length < 4 || data[3].trim().isEmpty() ? LocalDate.now() : parseDate(data[3].trim()));
+
+            if (data.length > 3 && !data[3].trim().isEmpty()) {
+                employeeProject.setDateTo(parseDate(data[3].trim()));
+            } else {
+                employeeProject.setDateTo(LocalDate.now());
+            }
         } catch (NumberFormatException e) {
             throw new DomainException("INVALID_CSV: Error parsing " + e.getMessage());
         }
         return employeeProject;
     }
-
 
     private Long parseLong(String value, String fieldName) {
         try {
@@ -82,22 +85,7 @@ public class CSVParserService {
             throw new NumberFormatException(fieldName + " value '" + value + "' is not a valid number.");
         }
     }
-
-//    private LocalDate parseDate(String dateString) throws DomainException {
-//        if (dateString.equalsIgnoreCase("NULL")) {
-//            return LocalDate.now();
-//        }
-//        try {
-//            return tryParseDate(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
-//        } catch (DateTimeParseException e) {
-//            try {
-//                return tryParseDate(dateString, DateTimeFormatter.ofPattern("M/d/yyyy"));
-//            } catch (DateTimeParseException ex) {
-//                logger.error("Invalid date format in line: '" + dateString + "'");
-//                throw new DomainException("INVALID_DATA: Date '" + dateString + "' is not in a valid format.");
-//            }
-//        }
-//    }
+    
 private LocalDate parseDate(String dateString) throws DomainException {
     dateString = dateString != null ? dateString.trim() : "";
 
@@ -107,7 +95,8 @@ private LocalDate parseDate(String dateString) throws DomainException {
 
     List<DateTimeFormatter> formatters = List.of(
             DateTimeFormatter.ISO_LOCAL_DATE,
-            DateTimeFormatter.ofPattern("M/d/yyyy")
+            DateTimeFormatter.ofPattern("M/d/yyyy"),
+            DateTimeFormatter.ofPattern("yyy/M/d")
     );
 
     for (DateTimeFormatter formatter : formatters) {
@@ -122,8 +111,4 @@ private LocalDate parseDate(String dateString) throws DomainException {
     throw new DomainException("INVALID_DATA: Date '" + dateString + "' is not in a valid format.");
 }
 
-
-    private LocalDate tryParseDate(String dateString, DateTimeFormatter formatter) throws DateTimeParseException {
-        return LocalDate.parse(dateString, formatter);
-    }
 }
