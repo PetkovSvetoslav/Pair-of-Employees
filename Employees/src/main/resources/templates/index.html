@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Project Collaboration</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="container">
+    <h1>Find Longest Working Employee Pairs</h1>
+    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <button type="submit">Upload CSV</button>
+    </form>
+
+    <div th:if="${pairs != null}">
+        <h2>Results:</h2>
+        <ul>
+            <li th:each="pair : ${pairs}">
+                <span th:text="${pair}">Pair Info</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
