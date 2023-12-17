@@ -69,3 +69,33 @@ li {
     border: 1px solid #dee2e6;
     border-radius: 4px;
 }
+/* General button styling */
+.button {
+    display: inline-block;
+    padding: 6px 12px; 
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px; 
+    border-radius: 4px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(21, 156, 228, 0.4);
+}
+
+.home-button {
+    text-align: center;
+}
