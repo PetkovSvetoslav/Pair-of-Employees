@@ -30,7 +30,7 @@ public class CSVParserService {
         }
 
         List<EmployeeProject> employeeProjects = new ArrayList<>();
-        String line = null; // Declare line outside the try block
+        String line = null;
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             boolean isFirstLine = true;
