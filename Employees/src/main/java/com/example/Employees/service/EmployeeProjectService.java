@@ -18,26 +18,29 @@ public class EmployeeProjectService {
         this.employeeProjectRepository = employeeProjectRepository;
     }
 
-    public List<String> findLongestWorkingPairs() {
-        List<EmployeeProject> allProjects = employeeProjectRepository.findAll();
-        Map<Pair, Map<Long, Integer>> pairProjectDays = new HashMap<>();
+ public List<String> findLongestWorkingPairs() {
+    List<EmployeeProject> allProjects = employeeProjectRepository.findAll();
+    Map<Pair, Map<Long, Integer>> pairProjectDays = new HashMap<>();
 
-        for (EmployeeProject project1 : allProjects) {
-            for (EmployeeProject project2 : allProjects) {
-                if (!project1.getProjectId().equals(project2.getProjectId())) {
-                    continue;
-                }
-
-                Pair pair = new Pair(project1.getEmployeeId(), project2.getEmployeeId());
-                int daysWorkedTogether = calculateOverlapDays(project1, project2);
-
-                pairProjectDays.computeIfAbsent(pair, k -> new HashMap<>())
-                        .merge(project1.getProjectId(), daysWorkedTogether, Integer::sum);
+    for (EmployeeProject project1 : allProjects) {
+        for (EmployeeProject project2 : allProjects) {
+            if (!project1.getProjectId().equals(project2.getProjectId()) || project1.getEmployeeId().equals(project2.getEmployeeId())) {
+                continue;
             }
-        }
 
-        return formatOutput(pairProjectDays);
+            Long empId1 = Math.min(project1.getEmployeeId(), project2.getEmployeeId());
+            Long empId2 = Math.max(project1.getEmployeeId(), project2.getEmployeeId());
+
+            Pair pair = new Pair(empId1, empId2);
+            int daysWorkedTogether = calculateOverlapDays(project1, project2);
+
+            pairProjectDays.computeIfAbsent(pair, k -> new HashMap<>())
+                    .merge(project1.getProjectId(), daysWorkedTogether, Integer::sum);
+        }
     }
+
+    return formatOutput(pairProjectDays);
+}
 
 
     private int calculateOverlapDays(EmployeeProject project1, EmployeeProject project2) {
@@ -54,23 +57,6 @@ public class EmployeeProjectService {
         return d1.isBefore(d2) ? d1 : (d2 != null ? d2 : d1);
     }
 
-//    private List<String> formatOutput(Map<Pair, Map<Long, Integer>> pairProjectDays) {
-//        List<String> output = new ArrayList<>();
-//        Set<Pair> processedPairs = new HashSet<>();
-//
-//        pairProjectDays.forEach((pair, projectDays) -> {
-//            if (pair.getEmployeeId1().equals(pair.getEmployeeId2())) {
-//                return;
-//            }
-//            if (!processedPairs.add(pair)) {
-//                return;
-//            }
-//            int totalDays = projectDays.values().stream().mapToInt(Integer::intValue).sum();
-//            output.add(pair.getEmployeeId1() + ", " + pair.getEmployeeId2() + ", " + totalDays);
-//            projectDays.forEach((projectId, days) -> output.add("\t" + projectId + ", " + days));
-//        });
-//        return output;
-//    }
 private List<String> formatOutput(Map<Pair, Map<Long, Integer>> pairProjectDays) {
     List<String> output = new ArrayList<>();
 
